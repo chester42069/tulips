@@ -35,10 +35,29 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            background: radial-gradient(circle at center, var(--bg-pink), var(--bg-blue));
+            background-color: #000; /* Base color */
             font-family: 'Helvetica Neue', sans-serif;
             overflow: hidden;
             touch-action: none; 
+        }
+
+        /* --- THE NEW TULIP BACKGROUND --- */
+        .bg-image {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url('tulips.png');
+            background-size: cover;
+            background-position: center;
+            opacity: 0.5; /* Dims the photo so it doesn't overpower the card */
+            z-index: -2;
+        }
+
+        /* Gradient Overlay to maintain the pink/blue theme */
+        .bg-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at center, rgba(76, 29, 149, 0.5), rgba(15, 23, 42, 0.95));
+            z-index: -1;
         }
 
         /* Ambient Stardust Background */
@@ -63,7 +82,7 @@
         #lock-screen {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(15, 23, 42, 0.95);
+            background: rgba(15, 23, 42, 0.85); /* Slightly more transparent to see tulips */
             backdrop-filter: blur(15px);
             -webkit-backdrop-filter: blur(15px);
             z-index: 100;
@@ -148,19 +167,19 @@
             pointer-events: none;
         }
 
-        /* --- 2. THE MAGICAL WRITING (FIXED ALIGNMENT) --- */
+        /* --- 2. THE MAGICAL WRITING --- */
         .sky-scene {
             position: absolute;
             width: 100%;
             z-index: 5; 
             pointer-events: none;
-            display: flex; /* Flexbox keeps the text perfectly centered and contained */
+            display: flex; 
             justify-content: center;
             align-items: center;
         }
         
         .sky-top { top: 6vh; }
-        .sky-bottom { bottom: 8vh; } /* Safely anchors to the bottom margin */
+        .sky-bottom { bottom: 8vh; } 
 
         .sky-text {
             font-family: 'Dancing Script', cursive;
@@ -171,7 +190,7 @@
             border-right: 2px solid transparent; 
             padding: 10px 20px; 
             line-height: 1.2;
-            white-space: nowrap; /* Prevents text from breaking into two lines */
+            white-space: nowrap; 
         }
 
         .sky-bottom .sky-text {
@@ -305,7 +324,7 @@
         .letter-content::-webkit-scrollbar { width: 5px; }
         .letter-content::-webkit-scrollbar-thumb { background-color: var(--accent-pink); border-radius: 10px; }
         .letter-content h2 { color: #be185d; font-weight: 600; font-size: 1.8rem; margin-top: 0; }
-        .sign-off { margin-top: 40px; font-weight: bold; color: #be185d; font-size: 1.2rem; }
+        .sign-off { margin-top: 30px; font-weight: bold; color: #be185d; font-size: 1.2rem; }
 
         .orb {
             position: absolute;
@@ -317,7 +336,7 @@
 
         /* --- MOBILE RESPONSIVENESS FIXES --- */
         @media (max-width: 450px), (max-height: 750px) {
-            .sky-text { font-size: 2rem; } /* Ensures text stays on screen */
+            .sky-text { font-size: 2rem; } 
             .sky-top { top: 4vh; }
             .sky-bottom { bottom: 4vh; }
             .card-scene { height: 460px; } 
@@ -326,12 +345,17 @@
             .card-face { padding: 25px; }
             .instruction { font-size: 1rem; }
             .letter-content h2 { font-size: 1.5rem; }
+            .letter-content p { font-size: 0.95rem; margin-bottom: 12px; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Ambient Background Effects -->
+    <!-- The Realistic Tulip Background -->
+    <div class="bg-image"></div>
+    <div class="bg-overlay"></div>
+
+    <!-- Ambient Glowing Orbs -->
     <div class="orb" style="background: #f472b6; width: 350px; height: 350px; top: 5%; left: 5%;"></div>
     <div class="orb" style="background: #60a5fa; width: 300px; height: 300px; bottom: 5%; right: 5%;"></div>
     <div id="stardust-container"></div>
@@ -439,12 +463,14 @@
                 <!-- BACK (The Letter) -->
                 <div class="card-face card-back">
                     <div class="letter-content" id="letter">
-                        <h2>To My Favorite Person,</h2>
-                        <p>I wanted to do something a little different for Girlfriend's Day this year. Instead of just buying a card, I wanted to build one specifically for you, featuring your absolute favorite colors.</p>
-                        <p>You make every single day brighter. I appreciate your patience, your warmth, and all the little things you do that go unnoticed.</p>
-                        <p>[Insert your personal memories, inside jokes, and everything you love about her right here.]</p>
-                        <p>Thank you for being my biggest supporter and my best friend.</p>
-                        <p class="sign-off">Love,<br>Winchester</p>
+                        <h2>Hi mahal,</h2>
+                        <p>Happy Girlfriend's Day! ❤️ Una sa lahat, I love you so much. Thank you sa pagiging understanding na partner ko. Thank you kasi pinipili mong mag-stay sa'kin kahit minsan matigas ang ulo ko at sakit ako sa ulo HAHAHAHAHA. Thank you kasi lagi kang nandiyan, no matter what we're going through. Nandiyan ka kahit hindi maganda ang mood mo, at nandiyan ka rin kahit ako naman ang may topak.</p>
+                        <p>Alam ko marami tayong pinagdaanang pag-aaway nitong mga nakaraang araw, at umabot pa tayo sa puntong muntik na tayong maghiwalay. Pero alam mo naman, hindi natin hahayaan na mangyari 'yon. Kahit anong pagsubok ang dumating, pipiliin pa rin nating lumaban para sa relasyon natin.</p>
+                        <p>Normal lang mapagod, at naiintindihan kita kasi nararanasan ko rin 'yon. Pero sana, kahit mapagod tayo, huwag tayong susuko sa isa't isa. Lagi nating piliing ayusin kaysa bitawan.</p>
+                        <p>Alam mo naman na ikaw ang first true love ko at ikaw rin ang greatest love ko. Ayokong mawala ka, at hindi ako papayag na mawala ka sa buhay ko. Ikaw ang gusto kong makasama sa lahat ng bagay. Ikaw lang. Tayong dalawa lang. Wala nang iba.</p>
+                        <p>Mahal na mahal kita, at handa akong gawin ang lahat at tiisin ang lahat para satin. Hindi dahil madali, kundi dahil ikaw ang gusto kong makasama habang buhay.</p>
+                        <p>Again, Happy Girlfriend's Day, mahal. ❤️ Thank you for loving me, for staying, and for choosing me every single day. I promise na patuloy kitang pipiliin araw-araw.</p>
+                        <p class="sign-off">I love you so much.<br>MWA MWA MWA! 😘❤️<br><br>Winchester</p>
                     </div>
                 </div>
 
