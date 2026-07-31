@@ -35,24 +35,23 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            background-color: #000; /* Base color */
+            background-color: #000; 
             font-family: 'Helvetica Neue', sans-serif;
             overflow: hidden;
             touch-action: none; 
         }
 
-        /* --- THE NEW TULIP BACKGROUND --- */
+        /* --- THE TULIP BACKGROUND --- */
         .bg-image {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
             background-image: url('tulips.png');
             background-size: cover;
             background-position: center;
-            opacity: 0.5; /* Dims the photo so it doesn't overpower the card */
+            opacity: 0.5; 
             z-index: -2;
         }
 
-        /* Gradient Overlay to maintain the pink/blue theme */
         .bg-overlay {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -82,7 +81,7 @@
         #lock-screen {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(15, 23, 42, 0.85); /* Slightly more transparent to see tulips */
+            background: rgba(15, 23, 42, 0.85); 
             backdrop-filter: blur(15px);
             -webkit-backdrop-filter: blur(15px);
             z-index: 100;
@@ -278,9 +277,15 @@
             z-index: 2;
         }
 
-        .flower, .ribbon-group {
-            transform-origin: 50% 170px;
+        /* Pivot point set exactly to the bottom of the stems */
+        .flower {
+            transform-origin: 50px 180px; 
             transform: scale(0); 
+        }
+        
+        .ribbon-group {
+            transform-origin: center;
+            transform: scale(0);
         }
 
         .front-title {
@@ -422,14 +427,14 @@
                             </linearGradient>
 
                             <g id="pink-tulip">
-                                <path d="M50,70 Q55,110 50,180" stroke="url(#stem-grad)" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+                                <path d="M50,70 Q55,110 50,200" stroke="url(#stem-grad)" stroke-width="4.5" fill="none" stroke-linecap="round"/>
                                 <path d="M50,120 Q70,110 80,70 Q60,90 50,120" fill="url(#stem-grad)"/>
                                 <path d="M50,130 Q30,120 20,80 Q40,100 50,130" fill="url(#stem-grad)"/>
                                 <path d="M25,70 Q25,20 50,30 Q75,20 75,70 Q75,90 50,90 Q25,90 25,70 Z" fill="#9d174d"/>
                                 <path d="M35,65 Q35,30 50,40 Q65,30 65,65 Q65,80 50,80 Q35,80 35,65 Z" fill="url(#pink-grad)"/>
                             </g>
                             <g id="blue-tulip">
-                                <path d="M50,70 Q55,110 50,180" stroke="url(#stem-grad)" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+                                <path d="M50,70 Q55,110 50,200" stroke="url(#stem-grad)" stroke-width="4.5" fill="none" stroke-linecap="round"/>
                                 <path d="M50,120 Q70,110 80,70 Q60,90 50,120" fill="url(#stem-grad)"/>
                                 <path d="M50,130 Q30,120 20,80 Q40,100 50,130" fill="url(#stem-grad)"/>
                                 <path d="M25,70 Q25,20 50,30 Q75,20 75,70 Q75,90 50,90 Q25,90 25,70 Z" fill="#1e3a8a"/>
@@ -438,21 +443,37 @@
                         </defs>
                     </svg>
 
-                    <!-- Rendering the Bouquet & Romantic Ribbon -->
+                    <!-- Rendering the 9-Tulip Tied Bouquet -->
                     <svg class="bouquet-container" viewBox="0 0 200 240" xmlns="http://www.w3.org/2000/svg">
-                        <use href="#blue-tulip" class="flower" data-target-scale="0.85" data-target-rotate="-22" transform="translate(10, 30)" />
-                        <use href="#pink-tulip" class="flower" data-target-scale="0.85" data-target-rotate="22" transform="translate(90, 30)" />
-                        <use href="#pink-tulip" class="flower" data-target-scale="0.9" data-target-rotate="0" transform="translate(50, 5)" />
-                        <use href="#blue-tulip" class="flower" data-target-scale="1.05" data-target-rotate="-10" transform="translate(30, 35)" />
-                        <use href="#pink-tulip" class="flower" data-target-scale="1.05" data-target-rotate="10" transform="translate(70, 35)" />
+                        <!-- BACK LAYER -->
+                        <use href="#blue-tulip" class="flower" data-target-scale="0.8" data-target-rotate="-35" transform="translate(45, -7)" />
+                        <use href="#pink-tulip" class="flower" data-target-scale="0.8" data-target-rotate="35" transform="translate(47, 5.5)" />
+                        <use href="#pink-tulip" class="flower" data-target-scale="0.85" data-target-rotate="-20" transform="translate(46, -2)" />
+                        <use href="#blue-tulip" class="flower" data-target-scale="0.85" data-target-rotate="20" transform="translate(54, -2)" />
+                        <use href="#pink-tulip" class="flower" data-target-scale="0.9" data-target-rotate="0" transform="translate(50, -8)" />
                         
-                        <!-- Romantic Silk Ribbon -->
-                        <g class="ribbon-group" transform="translate(100, 160)" filter="drop-shadow(0 4px 4px rgba(0,0,0,0.4))">
-                            <path d="M-5,-5 C-25,-25 -40,10 -5,5 Z" fill="url(#ribbon-grad)"/>
-                            <path d="M5,-5 C25,-25 40,10 5,5 Z" fill="url(#ribbon-grad)"/>
-                            <circle cx="0" cy="0" r="7" fill="#be185d"/>
-                            <path d="M-3,5 Q-15,40 -25,65 Q-5,50 0,6" fill="url(#ribbon-grad)"/>
-                            <path d="M3,5 Q15,40 25,65 Q5,50 0,6" fill="url(#ribbon-grad)"/>
+                        <!-- MIDDLE LAYER -->
+                        <use href="#blue-tulip" class="flower" data-target-scale="0.95" data-target-rotate="-12" transform="translate(47, 5)" />
+                        <use href="#pink-tulip" class="flower" data-target-scale="0.95" data-target-rotate="12" transform="translate(53, 5)" />
+                        
+                        <!-- FRONT LAYER -->
+                        <use href="#pink-tulip" class="flower" data-target-scale="1.05" data-target-rotate="-6" transform="translate(48, 15)" />
+                        <use href="#blue-tulip" class="flower" data-target-scale="1.05" data-target-rotate="6" transform="translate(52, 15)" />
+                        
+                        <!-- Romantic Silk Ribbon tied exactly where stems meet -->
+                        <g class="ribbon-group" data-target-scale="2.3" transform="translate(202, 295)" filter="drop-shadow(0 4px 4px rgba(0,0,0,0.4))">
+                            <!-- Wrap holding them together -->
+                            <path d="M-12,0 Q0,4 12,0 L10,8 Q0,12 -10,8 Z" fill="url(#ribbon-grad)"/>
+                            <!-- Left Bow Loop -->
+                            <path d="M-4,-2 C-24,-20 -35,10 -4,5 Z" fill="url(#ribbon-grad)"/>
+                            <!-- Right Bow Loop -->
+                            <path d="M4,-2 C24,-20 35,10 4,5 Z" fill="url(#ribbon-grad)"/>
+                            <!-- Center Knot -->
+                            <circle cx="0" cy="2" r="5" fill="#be185d"/>
+                            <!-- Left Tail -->
+                            <path d="M-2,5 Q-12,35 -20,55 Q-5,40 0,6" fill="url(#ribbon-grad)"/>
+                            <!-- Right Tail -->
+                            <path d="M2,5 Q12,35 20,55 Q5,40 0,6" fill="url(#ribbon-grad)"/>
                         </g>
                     </svg>
 
@@ -480,7 +501,6 @@
 
     <!-- Advanced JavaScript Logic -->
     <script>
-        // --- 0. Initialize Stardust ---
         const stardustContainer = document.getElementById('stardust-container');
         for(let i=0; i<30; i++) {
             let dust = document.createElement('div');
@@ -492,7 +512,6 @@
             stardustContainer.appendChild(dust);
         }
 
-        // --- 1. Haptic & Visual Hold-to-Unlock ---
         const interactionZone = document.getElementById('interaction-zone');
         const heartWrapper = document.getElementById('heart-wrapper');
         const heartFill = document.getElementById('heart-fill');
@@ -576,7 +595,6 @@
         window.addEventListener('touchend', stopHolding);
         window.addEventListener('touchcancel', stopHolding);
 
-        // --- 2. The Romantic Grand Reveal & Magical Writing ---
         function triggerUnlock() {
             isUnlocked = true;
             isHolding = false;
@@ -648,7 +666,6 @@
             setupDeviceOrientation();
         }
 
-        // --- 3. True 3D Parallax Gyroscope ---
         function setupDeviceOrientation() {
             const fireflies = document.querySelectorAll('.firefly');
 
