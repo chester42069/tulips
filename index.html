@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>For You 💙🩷</title>
+    
+    <!-- GSAP for advanced, hardware-accelerated animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    
+    <!-- Google Fonts for the romantic skywriting -->
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-blue: #0f172a;
+            --bg-pink: #4c1d95;
+            --accent-pink: #f472b6;
+            --accent-blue: #60a5fa;
+            --glass-bg: rgba(255, 255, 255, 0.12);
+            --glass-border: rgba(255, 255, 255, 0.25);
+            --text-dark: #1e293b;
+        }
+
+        * { 
+            box-sizing: border-box; 
+            -webkit-touch-callout: none; 
+            -webkit-user-select: none; 
+            user-select: none; 
+        }
+
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: radial-gradient(circle at center, var(--bg-pink), var(--bg-blue));
+            font-family: 'Helvetica Neue', sans-serif;
+            overflow: hidden;
+            touch-action: none; 
+        }
+
+        /* --- 1. THE HOLD-TO-UNLOCK SCREEN --- */
+        #lock-screen {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            transition: opacity 0.8s ease, visibility 0.8s ease;
+        }
+
+        .instruction {
+            font-size: 1.2rem;
+            color: var(--accent-pink);
+            margin-bottom: 40px;
+            text-align: center;
+            font-weight: 300;
+            letter-spacing: 1px;
+            animation: pulseText 2s infinite;
+        }
+
+        @keyframes pulseText {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+
+        /* The Interactive Heart & Shockwave */
+        .interaction-wrapper {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #shockwave {
+            position: absolute;
+            width: 150px; height: 150px;
+            border-radius: 50%;
+            border: 4px solid var(--accent-pink);
+            opacity: 0;
+            transform: scale(1);
+            pointer-events: none;
+            box-shadow: 0 0 30px var(--accent-pink), inset 0 0 30px var(--accent-pink);
+        }
+
+        .heart-container {
+            position: relative;
+            width: 160px;
+            height: 160px;
+            cursor: pointer;
+            filter: drop-shadow(0 0 10px rgba(244, 114, 182, 0.3));
+            transition: filter 0.1s;
+        }
+
+        .heart-outline, .heart-fill {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+        }
+
+        .heart-outline path {
+            fill: rgba(255, 255, 255, 0.05);
+            stroke: var(--accent-pink);
+            stroke-width: 3;
+        }
+
+        .heart-fill { clip-path: inset(100% 0 0 0); }
+        .heart-fill path { fill: url(#heart-grad); }
+
+        /* Spark Particles Container */
+        #spark-container {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            overflow: visible;
+        }
+
+        .spark {
+            position: absolute;
+            width: 6px; height: 6px;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 0 10px 2px var(--accent-pink);
+            pointer-events: none;
+        }
+
+        /* --- 2. THE MAGICAL WRITING --- */
+        .sky-scene {
+            position: absolute;
+            width: 100%;
+            height: 60px;
+            z-index: 5; /* Behind the card, above the background */
+            pointer-events: none;
+        }
+        
+        .sky-top { top: 6%; }
+        .sky-bottom { bottom: 6%; }
+
+        .sky-text {
+            position: absolute;
+            width: 100%;
+            text-align: center;
+            font-family: 'Dancing Script', cursive;
+            font-size: 2.8rem;
+            color: #ffffff;
+            text-shadow: 0 0 10px #fbcfe8, 0 0 20px #db2777;
+            clip-path: inset(0 100% 0 0); /* Hidden initially */
+        }
+
+        /* --- 3. THE MAIN CARD --- */
+        .card-wrapper {
+            perspective: 1500px;
+            z-index: 10;
+            opacity: 0;
+            transform: scale(0.8);
+            pointer-events: none;
+        }
+
+        .card-scene {
+            display: block;
+            width: 90vw;
+            max-width: 380px;
+            height: 550px;
+            cursor: pointer;
+        }
+
+        .card-inner {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transition: transform 1.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+            transform-style: preserve-3d;
+        }
+
+        #card-toggle:checked ~ .card-scene .card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+            border-radius: 24px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-top: 1px solid rgba(255, 255, 255, 0.5);
+            border-left: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            padding: 35px;
+            overflow: hidden; 
+        }
+
+        .card-front { align-items: center; justify-content: center; }
+
+        /* Magical Fireflies */
+        .firefly {
+            position: absolute;
+            width: 4px; height: 4px;
+            background: #fff;
+            border-radius: 50%;
+            box-shadow: 0 0 10px 2px rgba(255, 255, 255, 0.8);
+            animation: float 4s infinite ease-in-out alternate;
+            opacity: 0.6;
+        }
+        .ff-1 { top: 20%; left: 20%; animation-duration: 3s; }
+        .ff-2 { top: 60%; left: 80%; animation-duration: 5s; animation-delay: 1s; }
+        .ff-3 { top: 40%; left: 70%; animation-duration: 4.5s; animation-delay: 2s; }
+        .ff-4 { top: 70%; left: 25%; animation-duration: 6s; animation-delay: 0.5s; }
+        .ff-5 { top: 30%; left: 50%; animation-duration: 4s; animation-delay: 1.5s; }
+
+        @keyframes float {
+            0% { transform: translateY(0) scale(1); opacity: 0.4; }
+            100% { transform: translateY(-20px) scale(1.5); opacity: 1; }
+        }
+
+        .bouquet-container {
+            width: 100%;
+            height: 300px;
+            filter: drop-shadow(0 15px 15px rgba(0,0,0,0.4));
+            overflow: visible;
+            z-index: 2;
+        }
+
+        .flower, .ribbon-group {
+            transform-origin: 50% 170px;
+            transform: scale(0); 
+        }
+
+        .front-title {
+            color: #ffffff;
+            text-align: center;
+            font-size: 2.2rem;
+            font-weight: 300;
+            margin: 15px 0 5px 0;
+            line-height: 1.2;
+            text-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            z-index: 2;
+        }
+
+        .hint {
+            color: #bfdbfe;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-top: auto;
+            font-weight: bold;
+            animation: pulseText 2s infinite;
+            z-index: 2;
+        }
+
+        .card-back {
+            transform: rotateY(180deg);
+            background: rgba(255, 255, 255, 0.95);
+        }
+
+        .letter-content {
+            width: 100%;
+            height: 100%;
+            overflow-y: auto;
+            padding-right: 15px;
+            color: var(--text-dark);
+            line-height: 1.8;
+            touch-action: pan-y; 
+        }
+
+        .letter-content::-webkit-scrollbar { width: 5px; }
+        .letter-content::-webkit-scrollbar-thumb { background-color: var(--accent-pink); border-radius: 10px; }
+        .letter-content h2 { color: #be185d; font-weight: 600; font-size: 1.6rem; margin-top: 0; }
+        .sign-off { margin-top: 40px; font-weight: bold; color: #be185d; }
+
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(50px);
+            z-index: 0;
+            opacity: 0.4;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Ambient Glowing Orbs Background -->
+    <div class="orb" style="background: #f472b6; width: 350px; height: 350px; top: 5%; left: 5%;"></div>
+    <div class="orb" style="background: #60a5fa; width: 300px; height: 300px; bottom: 5%; right: 5%;"></div>
+
+    <!-- Magical Writing Scenes -->
+    <div class="sky-scene sky-top">
+        <div class="sky-text">I love you</div>
+    </div>
+    <div class="sky-scene sky-bottom">
+        <div class="sky-text">Happy Girlfriend's Day</div>
+    </div>
+
+    <!-- 1. The Lock Screen -->
+    <div id="lock-screen">
+        <h2 class="instruction">Press and hold to fill with love...</h2>
+        
+        <div class="interaction-wrapper" id="interaction-zone">
+            <!-- The Expanding Shockwave -->
+            <div id="shockwave"></div>
+            <!-- The Spark Particle Container -->
+            <div id="spark-container"></div>
+            
+            <div class="heart-container" id="heart-wrapper">
+                <svg width="0" height="0">
+                    <defs>
+                        <linearGradient id="heart-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" stop-color="#fbcfe8"/><stop offset="100%" stop-color="#be185d"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+                <svg class="heart-outline" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M50,85 C20,55 10,40 10,25 C10,10 30,5 50,25 C70,5 90,10 90,25 C90,40 80,55 50,85 Z" />
+                </svg>
+                <svg class="heart-fill" id="heart-fill" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M50,85 C20,55 10,40 10,25 C10,10 30,5 50,25 C70,5 90,10 90,25 C90,40 80,55 50,85 Z" />
+                </svg>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. The Main Card -->
+    <div class="card-wrapper" id="main-card">
+        <input type="checkbox" id="card-toggle" hidden>
+        <label for="card-toggle" class="card-scene" id="card-scene">
+            <div class="card-inner">
+                
+                <!-- FRONT -->
+                <div class="card-face card-front">
+                    <!-- Magical Fireflies -->
+                    <div class="firefly ff-1"></div><div class="firefly ff-2"></div>
+                    <div class="firefly ff-3"></div><div class="firefly ff-4"></div><div class="firefly ff-5"></div>
+
+                    <svg width="0" height="0" class="svg-defs">
+                        <defs>
+                            <linearGradient id="pink-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#fbcfe8"/><stop offset="100%" stop-color="#db2777"/>
+                            </linearGradient>
+                            <linearGradient id="blue-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#bfdbfe"/><stop offset="100%" stop-color="#2563eb"/>
+                            </linearGradient>
+                            <linearGradient id="stem-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" stop-color="#22c55e"/><stop offset="100%" stop-color="#14532d"/>
+                            </linearGradient>
+                            <linearGradient id="ribbon-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#f472b6"/><stop offset="100%" stop-color="#9d174d"/>
+                            </linearGradient>
+
+                            <g id="pink-tulip">
+                                <path d="M50,70 Q55,110 50,180" stroke="url(#stem-grad)" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+                                <path d="M50,120 Q70,110 80,70 Q60,90 50,120" fill="url(#stem-grad)"/>
+                                <path d="M50,130 Q30,120 20,80 Q40,100 50,130" fill="url(#stem-grad)"/>
+                                <path d="M25,70 Q25,20 50,30 Q75,20 75,70 Q75,90 50,90 Q25,90 25,70 Z" fill="#9d174d"/>
+                                <path d="M35,65 Q35,30 50,40 Q65,30 65,65 Q65,80 50,80 Q35,80 35,65 Z" fill="url(#pink-grad)"/>
+                            </g>
+                            <g id="blue-tulip">
+                                <path d="M50,70 Q55,110 50,180" stroke="url(#stem-grad)" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+                                <path d="M50,120 Q70,110 80,70 Q60,90 50,120" fill="url(#stem-grad)"/>
+                                <path d="M50,130 Q30,120 20,80 Q40,100 50,130" fill="url(#stem-grad)"/>
+                                <path d="M25,70 Q25,20 50,30 Q75,20 75,70 Q75,90 50,90 Q25,90 25,70 Z" fill="#1e3a8a"/>
+                                <path d="M35,65 Q35,30 50,40 Q65,30 65,65 Q65,80 50,80 Q35,80 35,65 Z" fill="url(#blue-grad)"/>
+                            </g>
+                        </defs>
+                    </svg>
+
+                    <!-- Rendering the Bouquet & Romantic Ribbon -->
+                    <svg class="bouquet-container" viewBox="0 0 200 240" xmlns="http://www.w3.org/2000/svg">
+                        <use href="#blue-tulip" class="flower" data-target-scale="0.85" data-target-rotate="-22" transform="translate(10, 30)" />
+                        <use href="#pink-tulip" class="flower" data-target-scale="0.85" data-target-rotate="22" transform="translate(90, 30)" />
+                        <use href="#pink-tulip" class="flower" data-target-scale="0.9" data-target-rotate="0" transform="translate(50, 5)" />
+                        <use href="#blue-tulip" class="flower" data-target-scale="1.05" data-target-rotate="-10" transform="translate(30, 35)" />
+                        <use href="#pink-tulip" class="flower" data-target-scale="1.05" data-target-rotate="10" transform="translate(70, 35)" />
+                        
+                        <!-- Romantic Silk Ribbon -->
+                        <g class="ribbon-group" transform="translate(100, 160)" filter="drop-shadow(0 4px 4px rgba(0,0,0,0.4))">
+                            <path d="M-5,-5 C-25,-25 -40,10 -5,5 Z" fill="url(#ribbon-grad)"/>
+                            <path d="M5,-5 C25,-25 40,10 5,5 Z" fill="url(#ribbon-grad)"/>
+                            <circle cx="0" cy="0" r="7" fill="#be185d"/>
+                            <path d="M-3,5 Q-15,40 -25,65 Q-5,50 0,6" fill="url(#ribbon-grad)"/>
+                            <path d="M3,5 Q15,40 25,65 Q5,50 0,6" fill="url(#ribbon-grad)"/>
+                        </g>
+                    </svg>
+
+                    <h1 class="front-title">Happy<br>Girlfriend's Day</h1>
+                    <div class="hint">Tap to open</div>
+                </div>
+
+                <!-- BACK (The Letter) -->
+                <div class="card-face card-back">
+                    <div class="letter-content" id="letter">
+                        <h2>To My Favorite Person,</h2>
+                        <p>I wanted to do something a little different for Girlfriend's Day this year. Instead of just buying a card, I wanted to build one specifically for you, featuring your absolute favorite colors.</p>
+                        <p>You make every single day brighter. I appreciate your patience, your warmth, and all the little things you do that go unnoticed.</p>
+                        <p>[Insert your personal memories, inside jokes, and everything you love about her right here.]</p>
+                        <p>Thank you for being my biggest supporter and my best friend.</p>
+                        <p class="sign-off">Love,<br>Winchester</p>
+                    </div>
+                </div>
+
+            </div>
+        </label>
+    </div>
+
+    <!-- Advanced JavaScript Logic -->
+    <script>
+        const interactionZone = document.getElementById('interaction-zone');
+        const heartWrapper = document.getElementById('heart-wrapper');
+        const heartFill = document.getElementById('heart-fill');
+        const sparkContainer = document.getElementById('spark-container');
+        const shockwave = document.getElementById('shockwave');
+        const lockScreen = document.getElementById('lock-screen');
+        const mainCard = document.getElementById('main-card');
+        
+        let holdProgress = 0; 
+        let isHolding = false;
+        let isUnlocked = false;
+        let frameCount = 0;
+
+        function updateHeart() {
+            if (isUnlocked) return;
+            frameCount++;
+
+            if (isHolding) {
+                holdProgress += 1.0; 
+                if(frameCount % 4 === 0) createSpark();
+            } else {
+                holdProgress -= 2.0; 
+            }
+
+            holdProgress = Math.max(0, Math.min(100, holdProgress));
+            heartFill.style.clipPath = `inset(${100 - holdProgress}% 0 0 0)`;
+
+            if(holdProgress > 0) {
+                const speed = 250 - (holdProgress * 2);
+                const pulse = 1 + (Math.sin(Date.now() / speed) * 0.05 * (holdProgress/100));
+                heartWrapper.style.transform = `scale(${pulse})`;
+                
+                const glowLevel = 10 + (holdProgress * 0.5);
+                heartWrapper.style.filter = `drop-shadow(0 0 ${glowLevel}px rgba(244, 114, 182, ${0.3 + (holdProgress/100)}))`;
+            } else {
+                heartWrapper.style.transform = `scale(1)`;
+                heartWrapper.style.filter = `drop-shadow(0 0 10px rgba(244, 114, 182, 0.3))`;
+            }
+
+            if (holdProgress >= 100) {
+                triggerUnlock();
+            } else {
+                requestAnimationFrame(updateHeart);
+            }
+        }
+
+        function createSpark() {
+            const spark = document.createElement('div');
+            spark.classList.add('spark');
+            
+            const startX = 80 + (Math.random() * 40 - 20);
+            const startY = 80 + (Math.random() * 40 - 20);
+            
+            spark.style.left = startX + 'px';
+            spark.style.top = startY + 'px';
+            sparkContainer.appendChild(spark);
+
+            gsap.to(spark, {
+                x: (Math.random() - 0.5) * 150,
+                y: (Math.random() - 0.5) * 150 - 50,
+                opacity: 0,
+                scale: Math.random() * 2,
+                duration: 0.6 + Math.random() * 0.4,
+                ease: "power1.out",
+                onComplete: () => spark.remove() 
+            });
+        }
+
+        const startHolding = (e) => { 
+            if(e.cancelable) e.preventDefault(); 
+            isHolding = true; 
+            requestAnimationFrame(updateHeart); 
+        };
+        const stopHolding = () => { isHolding = false; };
+
+        interactionZone.addEventListener('mousedown', startHolding);
+        interactionZone.addEventListener('touchstart', startHolding, {passive: false});
+        window.addEventListener('mouseup', stopHolding);
+        window.addEventListener('touchend', stopHolding);
+        window.addEventListener('touchcancel', stopHolding);
+
+        // --- 2. The Romantic Grand Reveal & Magical Writing ---
+        function triggerUnlock() {
+            isUnlocked = true;
+            isHolding = false;
+            
+            // Shockwave Explosion
+            gsap.to(shockwave, { scale: 25, opacity: 0, duration: 0.8, ease: "power2.out" });
+            gsap.to(heartWrapper, { scale: 2.5, opacity: 0, duration: 0.5, ease: "power2.in" });
+            
+            setTimeout(() => { 
+                lockScreen.style.opacity = '0';
+                setTimeout(() => { lockScreen.style.visibility = 'hidden'; }, 800);
+            }, 300);
+
+            // Animate Card Entrance
+            mainCard.style.pointerEvents = 'auto'; 
+            gsap.to(mainCard, { opacity: 1, scale: 1, duration: 1.2, ease: "back.out(1.2)", delay: 0.4 });
+
+            // Magical Writing: Top Text ("I love you")
+            gsap.to('.sky-top .sky-text', {
+                clipPath: "inset(0 0% 0 0)",
+                duration: 3,
+                ease: "none",
+                delay: 1.5
+            });
+
+            // Magical Writing: Bottom Text ("Happy Girlfriend's Day" writing right-to-left)
+            gsap.set('.sky-bottom .sky-text', { clipPath: "inset(0 0 0 100%)" }); 
+            gsap.to('.sky-bottom .sky-text', {
+                clipPath: "inset(0 0 0 0%)",
+                duration: 3.5,
+                ease: "none",
+                delay: 3.0
+            });
+
+            // Animate the Bouquet Blooming
+            const flowers = document.querySelectorAll('.flower, .ribbon-group');
+            flowers.forEach((item, index) => {
+                const targetScale = item.getAttribute('data-target-scale') || 1;
+                const targetRotate = item.getAttribute('data-target-rotate') || 0;
+                
+                gsap.to(item, {
+                    scale: targetScale,
+                    rotation: targetRotate,
+                    duration: 1.5,
+                    ease: "elastic.out(1, 0.5)",
+                    delay: 1.0 + (index * 0.15)
+                });
+
+                if(item.classList.contains('flower')) {
+                    gsap.to(item, {
+                        rotation: parseFloat(targetRotate) + (index % 2 === 0 ? 2 : -2),
+                        duration: 3 + Math.random(),
+                        repeat: -1,
+                        yoyo: true,
+                        ease: "sine.inOut",
+                        delay: 3.0
+                    });
+                }
+            });
+            
+            setupDeviceOrientation();
+        }
+
+        // --- 3. Mobile Gyroscope 3D Card Tilt ---
+        function setupDeviceOrientation() {
+            document.getElementById('card-toggle').addEventListener('change', (e) => {
+                if(e.target.checked) {
+                    gsap.killTweensOf(mainCard);
+                    gsap.to(mainCard, { rotationY: 0, rotationX: 0, duration: 0.5 });
+                }
+            });
+
+            if (window.DeviceOrientationEvent && typeof window.DeviceOrientationEvent.requestPermission !== 'function') {
+                window.addEventListener('deviceorientation', (e) => {
+                    if(document.getElementById('card-toggle').checked) return;
+                    let tiltX = Math.max(-15, Math.min(15, e.gamma || 0));
+                    let tiltY = Math.max(-15, Math.min(15, (e.beta || 0) - 45));
+                    
+                    gsap.to(mainCard, {
+                        rotationY: tiltX / 1.5,
+                        rotationX: -tiltY / 1.5,
+                        duration: 0.3,
+                        ease: "power1.out"
+                    });
+                });
+            } else {
+                document.addEventListener('mousemove', (e) => {
+                    if(document.getElementById('card-toggle').checked) return;
+                    const xAxis = (window.innerWidth / 2 - e.pageX) / 30;
+                    const yAxis = (window.innerHeight / 2 - e.pageY) / 30;
+                    gsap.to(mainCard, { rotationY: xAxis, rotationX: yAxis, duration: 0.5 });
+                });
+            }
+        }
+        
+        document.body.addEventListener('touchmove', function(e) {
+            if(!e.target.closest('#letter')) {
+                e.preventDefault();
+            }
+        }, { passive: false });
+    </script>
+</body>
+</html>
