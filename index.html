@@ -41,6 +41,24 @@
             touch-action: none; 
         }
 
+        /* Ambient Stardust Background */
+        .stardust {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 0 8px 1px rgba(255,255,255,0.6);
+            opacity: 0;
+            animation: driftUp linear infinite;
+            z-index: 1;
+        }
+
+        @keyframes driftUp {
+            0% { transform: translateY(100vh) scale(0.5); opacity: 0; }
+            20% { opacity: 0.6; }
+            80% { opacity: 0.6; }
+            100% { transform: translateY(-20vh) scale(1.2); opacity: 0; }
+        }
+
         /* --- 1. THE HOLD-TO-UNLOCK SCREEN --- */
         #lock-screen {
             position: absolute;
@@ -72,7 +90,6 @@
             50% { opacity: 1; }
         }
 
-        /* The Interactive Heart & Shockwave */
         .interaction-wrapper {
             position: relative;
             display: flex;
@@ -115,7 +132,6 @@
         .heart-fill { clip-path: inset(100% 0 0 0); }
         .heart-fill path { fill: url(#heart-grad); }
 
-        /* Spark Particles Container */
         #spark-container {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -132,27 +148,35 @@
             pointer-events: none;
         }
 
-        /* --- 2. THE MAGICAL WRITING --- */
+        /* --- 2. THE MAGICAL WRITING (FIXED ALIGNMENT) --- */
         .sky-scene {
             position: absolute;
             width: 100%;
-            height: 60px;
-            z-index: 5; /* Behind the card, above the background */
+            z-index: 5; 
             pointer-events: none;
+            display: flex; /* Flexbox keeps the text perfectly centered and contained */
+            justify-content: center;
+            align-items: center;
         }
         
-        .sky-top { top: 6%; }
-        .sky-bottom { bottom: 6%; }
+        .sky-top { top: 6vh; }
+        .sky-bottom { bottom: 8vh; } /* Safely anchors to the bottom margin */
 
         .sky-text {
-            position: absolute;
-            width: 100%;
-            text-align: center;
             font-family: 'Dancing Script', cursive;
-            font-size: 2.8rem;
+            font-size: 3.2rem;
             color: #ffffff;
-            text-shadow: 0 0 10px #fbcfe8, 0 0 20px #db2777;
-            clip-path: inset(0 100% 0 0); /* Hidden initially */
+            text-shadow: 0 0 15px #fbcfe8, 0 0 25px #db2777;
+            clip-path: inset(0 100% 0 0); 
+            border-right: 2px solid transparent; 
+            padding: 10px 20px; 
+            line-height: 1.2;
+            white-space: nowrap; /* Prevents text from breaking into two lines */
+        }
+
+        .sky-bottom .sky-text {
+            border-left: 2px solid transparent;
+            border-right: none;
         }
 
         /* --- 3. THE MAIN CARD --- */
@@ -197,7 +221,7 @@
             border: 1px solid var(--glass-border);
             border-top: 1px solid rgba(255, 255, 255, 0.5);
             border-left: 1px solid rgba(255, 255, 255, 0.5);
-            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
             display: flex;
             flex-direction: column;
             padding: 35px;
@@ -206,31 +230,31 @@
 
         .card-front { align-items: center; justify-content: center; }
 
-        /* Magical Fireflies */
         .firefly {
             position: absolute;
-            width: 4px; height: 4px;
+            width: 5px; height: 5px;
             background: #fff;
             border-radius: 50%;
-            box-shadow: 0 0 10px 2px rgba(255, 255, 255, 0.8);
+            box-shadow: 0 0 12px 3px rgba(255, 255, 255, 0.9);
             animation: float 4s infinite ease-in-out alternate;
-            opacity: 0.6;
+            opacity: 0.7;
+            z-index: 3;
         }
-        .ff-1 { top: 20%; left: 20%; animation-duration: 3s; }
-        .ff-2 { top: 60%; left: 80%; animation-duration: 5s; animation-delay: 1s; }
-        .ff-3 { top: 40%; left: 70%; animation-duration: 4.5s; animation-delay: 2s; }
-        .ff-4 { top: 70%; left: 25%; animation-duration: 6s; animation-delay: 0.5s; }
-        .ff-5 { top: 30%; left: 50%; animation-duration: 4s; animation-delay: 1.5s; }
+        .ff-1 { top: 15%; left: 15%; animation-duration: 3.5s; }
+        .ff-2 { top: 65%; left: 85%; animation-duration: 5.2s; animation-delay: 1s; }
+        .ff-3 { top: 45%; left: 75%; animation-duration: 4.8s; animation-delay: 2s; }
+        .ff-4 { top: 75%; left: 20%; animation-duration: 6.1s; animation-delay: 0.5s; }
+        .ff-5 { top: 25%; left: 55%; animation-duration: 4.3s; animation-delay: 1.5s; }
 
         @keyframes float {
-            0% { transform: translateY(0) scale(1); opacity: 0.4; }
-            100% { transform: translateY(-20px) scale(1.5); opacity: 1; }
+            0% { transform: translateY(0) scale(1); opacity: 0.5; }
+            100% { transform: translateY(-25px) scale(1.5); opacity: 1; }
         }
 
         .bouquet-container {
             width: 100%;
             height: 300px;
-            filter: drop-shadow(0 15px 15px rgba(0,0,0,0.4));
+            filter: drop-shadow(0 15px 20px rgba(0,0,0,0.5));
             overflow: visible;
             z-index: 2;
         }
@@ -247,7 +271,7 @@
             font-weight: 300;
             margin: 15px 0 5px 0;
             line-height: 1.2;
-            text-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            text-shadow: 0 4px 15px rgba(0,0,0,0.4);
             z-index: 2;
         }
 
@@ -275,12 +299,13 @@
             color: var(--text-dark);
             line-height: 1.8;
             touch-action: pan-y; 
+            font-size: 1.05rem;
         }
 
         .letter-content::-webkit-scrollbar { width: 5px; }
         .letter-content::-webkit-scrollbar-thumb { background-color: var(--accent-pink); border-radius: 10px; }
-        .letter-content h2 { color: #be185d; font-weight: 600; font-size: 1.6rem; margin-top: 0; }
-        .sign-off { margin-top: 40px; font-weight: bold; color: #be185d; }
+        .letter-content h2 { color: #be185d; font-weight: 600; font-size: 1.8rem; margin-top: 0; }
+        .sign-off { margin-top: 40px; font-weight: bold; color: #be185d; font-size: 1.2rem; }
 
         .orb {
             position: absolute;
@@ -289,20 +314,34 @@
             z-index: 0;
             opacity: 0.4;
         }
+
+        /* --- MOBILE RESPONSIVENESS FIXES --- */
+        @media (max-width: 450px), (max-height: 750px) {
+            .sky-text { font-size: 2rem; } /* Ensures text stays on screen */
+            .sky-top { top: 4vh; }
+            .sky-bottom { bottom: 4vh; }
+            .card-scene { height: 460px; } 
+            .bouquet-container { height: 230px; } 
+            .front-title { font-size: 1.8rem; margin: 10px 0 5px 0; }
+            .card-face { padding: 25px; }
+            .instruction { font-size: 1rem; }
+            .letter-content h2 { font-size: 1.5rem; }
+        }
     </style>
 </head>
 <body>
 
-    <!-- Ambient Glowing Orbs Background -->
+    <!-- Ambient Background Effects -->
     <div class="orb" style="background: #f472b6; width: 350px; height: 350px; top: 5%; left: 5%;"></div>
     <div class="orb" style="background: #60a5fa; width: 300px; height: 300px; bottom: 5%; right: 5%;"></div>
+    <div id="stardust-container"></div>
 
     <!-- Magical Writing Scenes -->
     <div class="sky-scene sky-top">
-        <div class="sky-text">I love you</div>
+        <div class="sky-text" id="top-text">I love you</div>
     </div>
     <div class="sky-scene sky-bottom">
-        <div class="sky-text">Happy Girlfriend's Day</div>
+        <div class="sky-text" id="bottom-text">Happy Girlfriend's Day</div>
     </div>
 
     <!-- 1. The Lock Screen -->
@@ -310,9 +349,7 @@
         <h2 class="instruction">Press and hold to fill with love...</h2>
         
         <div class="interaction-wrapper" id="interaction-zone">
-            <!-- The Expanding Shockwave -->
             <div id="shockwave"></div>
-            <!-- The Spark Particle Container -->
             <div id="spark-container"></div>
             
             <div class="heart-container" id="heart-wrapper">
@@ -341,7 +378,7 @@
                 
                 <!-- FRONT -->
                 <div class="card-face card-front">
-                    <!-- Magical Fireflies -->
+                    <!-- Magical Fireflies for Parallax -->
                     <div class="firefly ff-1"></div><div class="firefly ff-2"></div>
                     <div class="firefly ff-3"></div><div class="firefly ff-4"></div><div class="firefly ff-5"></div>
 
@@ -417,6 +454,19 @@
 
     <!-- Advanced JavaScript Logic -->
     <script>
+        // --- 0. Initialize Stardust ---
+        const stardustContainer = document.getElementById('stardust-container');
+        for(let i=0; i<30; i++) {
+            let dust = document.createElement('div');
+            dust.className = 'stardust';
+            dust.style.left = Math.random() * 100 + 'vw';
+            dust.style.width = dust.style.height = (Math.random() * 4 + 2) + 'px';
+            dust.style.animationDuration = (Math.random() * 10 + 10) + 's';
+            dust.style.animationDelay = (Math.random() * 10) + 's';
+            stardustContainer.appendChild(dust);
+        }
+
+        // --- 1. Haptic & Visual Hold-to-Unlock ---
         const interactionZone = document.getElementById('interaction-zone');
         const heartWrapper = document.getElementById('heart-wrapper');
         const heartFill = document.getElementById('heart-fill');
@@ -429,13 +479,14 @@
         let isHolding = false;
         let isUnlocked = false;
         let frameCount = 0;
+        let lastVibeTime = 0;
 
         function updateHeart() {
             if (isUnlocked) return;
             frameCount++;
 
             if (isHolding) {
-                holdProgress += 1.0; 
+                holdProgress += 0.8; 
                 if(frameCount % 4 === 0) createSpark();
             } else {
                 holdProgress -= 2.0; 
@@ -446,11 +497,16 @@
 
             if(holdProgress > 0) {
                 const speed = 250 - (holdProgress * 2);
-                const pulse = 1 + (Math.sin(Date.now() / speed) * 0.05 * (holdProgress/100));
-                heartWrapper.style.transform = `scale(${pulse})`;
+                const sineValue = Math.sin(Date.now() / speed);
+                const pulse = 1 + (sineValue * 0.05 * (holdProgress/100));
                 
-                const glowLevel = 10 + (holdProgress * 0.5);
-                heartWrapper.style.filter = `drop-shadow(0 0 ${glowLevel}px rgba(244, 114, 182, ${0.3 + (holdProgress/100)}))`;
+                heartWrapper.style.transform = `scale(${pulse})`;
+                heartWrapper.style.filter = `drop-shadow(0 0 ${10 + (holdProgress * 0.5)}px rgba(244, 114, 182, ${0.3 + (holdProgress/100)}))`;
+
+                if (sineValue > 0.9 && Date.now() - lastVibeTime > 200) {
+                    if (navigator.vibrate) navigator.vibrate(15);
+                    lastVibeTime = Date.now();
+                }
             } else {
                 heartWrapper.style.transform = `scale(1)`;
                 heartWrapper.style.filter = `drop-shadow(0 0 10px rgba(244, 114, 182, 0.3))`;
@@ -466,19 +522,15 @@
         function createSpark() {
             const spark = document.createElement('div');
             spark.classList.add('spark');
-            
-            const startX = 80 + (Math.random() * 40 - 20);
-            const startY = 80 + (Math.random() * 40 - 20);
-            
-            spark.style.left = startX + 'px';
-            spark.style.top = startY + 'px';
+            spark.style.left = 80 + (Math.random() * 40 - 20) + 'px';
+            spark.style.top = 80 + (Math.random() * 40 - 20) + 'px';
             sparkContainer.appendChild(spark);
 
             gsap.to(spark, {
                 x: (Math.random() - 0.5) * 150,
                 y: (Math.random() - 0.5) * 150 - 50,
                 opacity: 0,
-                scale: Math.random() * 2,
+                scale: Math.random() * 2.5,
                 duration: 0.6 + Math.random() * 0.4,
                 ease: "power1.out",
                 onComplete: () => spark.remove() 
@@ -503,7 +555,8 @@
             isUnlocked = true;
             isHolding = false;
             
-            // Shockwave Explosion
+            if (navigator.vibrate) navigator.vibrate([100, 50, 100, 50, 200]);
+            
             gsap.to(shockwave, { scale: 25, opacity: 0, duration: 0.8, ease: "power2.out" });
             gsap.to(heartWrapper, { scale: 2.5, opacity: 0, duration: 0.5, ease: "power2.in" });
             
@@ -512,28 +565,35 @@
                 setTimeout(() => { lockScreen.style.visibility = 'hidden'; }, 800);
             }, 300);
 
-            // Animate Card Entrance
             mainCard.style.pointerEvents = 'auto'; 
             gsap.to(mainCard, { opacity: 1, scale: 1, duration: 1.2, ease: "back.out(1.2)", delay: 0.4 });
 
-            // Magical Writing: Top Text ("I love you")
-            gsap.to('.sky-top .sky-text', {
+            const topText = document.getElementById('top-text');
+            const bottomText = document.getElementById('bottom-text');
+
+            gsap.to(topText, {
                 clipPath: "inset(0 0% 0 0)",
                 duration: 3,
-                ease: "none",
-                delay: 1.5
+                ease: "power1.inOut",
+                delay: 1.5,
+                onUpdate: function() {
+                    if(this.progress() > 0.98) topText.style.borderRight = "none";
+                    else topText.style.borderRight = "2px solid #f472b6";
+                }
             });
 
-            // Magical Writing: Bottom Text ("Happy Girlfriend's Day" writing right-to-left)
-            gsap.set('.sky-bottom .sky-text', { clipPath: "inset(0 0 0 100%)" }); 
-            gsap.to('.sky-bottom .sky-text', {
+            gsap.set(bottomText, { clipPath: "inset(0 0 0 100%)" }); 
+            gsap.to(bottomText, {
                 clipPath: "inset(0 0 0 0%)",
                 duration: 3.5,
-                ease: "none",
-                delay: 3.0
+                ease: "power1.inOut",
+                delay: 3.0,
+                onUpdate: function() {
+                    if(this.progress() > 0.98) bottomText.style.borderLeft = "none";
+                    else bottomText.style.borderLeft = "2px solid #60a5fa";
+                }
             });
 
-            // Animate the Bouquet Blooming
             const flowers = document.querySelectorAll('.flower, .ribbon-group');
             flowers.forEach((item, index) => {
                 const targetScale = item.getAttribute('data-target-scale') || 1;
@@ -562,12 +622,16 @@
             setupDeviceOrientation();
         }
 
-        // --- 3. Mobile Gyroscope 3D Card Tilt ---
+        // --- 3. True 3D Parallax Gyroscope ---
         function setupDeviceOrientation() {
+            const fireflies = document.querySelectorAll('.firefly');
+
             document.getElementById('card-toggle').addEventListener('change', (e) => {
                 if(e.target.checked) {
                     gsap.killTweensOf(mainCard);
+                    gsap.killTweensOf(fireflies);
                     gsap.to(mainCard, { rotationY: 0, rotationX: 0, duration: 0.5 });
+                    gsap.to(fireflies, { x: 0, y: 0, duration: 0.5 });
                 }
             });
 
@@ -583,13 +647,22 @@
                         duration: 0.3,
                         ease: "power1.out"
                     });
+
+                    gsap.to(fireflies, {
+                        x: -tiltX * 1.5,
+                        y: -tiltY * 1.5,
+                        duration: 0.3,
+                        ease: "power1.out"
+                    });
                 });
             } else {
                 document.addEventListener('mousemove', (e) => {
                     if(document.getElementById('card-toggle').checked) return;
                     const xAxis = (window.innerWidth / 2 - e.pageX) / 30;
                     const yAxis = (window.innerHeight / 2 - e.pageY) / 30;
+                    
                     gsap.to(mainCard, { rotationY: xAxis, rotationX: yAxis, duration: 0.5 });
+                    gsap.to(fireflies, { x: -xAxis * 2, y: -yAxis * 2, duration: 0.5 });
                 });
             }
         }
